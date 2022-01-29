@@ -46,7 +46,7 @@ function displayAlert(text = "Incorrect username or password!") {
 }
 */
 async function fetchCredentials(username, password) {
-    const res = await fetch("login", {
+    const res = await fetch("/api/login", {
         method: "POST",
         body: JSON.stringify({
             username: username,
