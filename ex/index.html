@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>[ SquareBrackets ]</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+	<link rel="stylesheet" href="style.css">
+	<link rel="shortcut icon" type="image/png" href="/assets/favicon.png">
+</head>
+
+<body>
+
+	<div id="blanketDiv">
+		<div id="gameInfoDiv">
+			<h3 id="gameInfoTitle">Sicko Mode</h3>
+			<p id="gameInfoParagraph">This classic hit by Travis Scott is finally on SquareBrackets!</p>
+			<button id="launchButton">LAUNCH</button>
+			<button id="backButton" onclick="goBack()">GO BACK</button>
+		</div>
+	</div>
+
+	<div id="headerDiv">
+		<h1 id="headerTitle"><span>[</span> SquareBrackets <span>]</span></h1 id="headerTitle">
+	</div>
+
+	<div id="gamesDivWrapper">
+	<div id="gamesDiv">
+
+		<div class="gameWrapper">
+		<div class="game" onclick="clickGame('jsm')">
+			<div>jsm</div>
+			<img src="assets/jsm.png">
+		</div>
+		</div>
+
+		<div class="gameWrapper">
+		<div class="game" onclick="clickGame('gnome')">
+			<div>gnome</div>
+			<img src="assets/gnomeFighterPlus.png">
+		</div>
+		</div>
+
+		<div class="gameWrapper">
+		<div class="game" onclick="clickGame('tetris')">
+			<div>tetris</div>
+			<img src="assets/twitchTetris.png">
+		</div>
+		</div>
+
+		<div class="gameWrapper">
+		<div class="game" onclick="clickGame('roulette')">
+			<div>roulette</div>
+			<img src="assets/russianRoulette.png">
+		</div>
+		</div>
+
+		<div class="gameWrapper">
+		<div class="game" onclick="clickGame('crab web')">
+			<div>crab web</div>
+			<img src="assets/crabSimulatorWeb.png">
+		</div>
+		</div>
+
+		<div class="gameWrapper">
+		<div class="game" onclick="clickGame('crab py')">
+			<div>crab py</div>
+			<img src="assets/crabSimulatorPy.png">
+		</div>
+		</div>
+
+		<div class="gameWrapper">
+		<div class="game" onclick="clickGame('crab tsa')">
+			<div>crab tsa</div>
+			<img src="assets/crabSimulatorTSA.png">
+		</div>
+		</div>
+
+		<div class="gameWrapper">
+		<div class="game" onclick="clickGame('hangman')">
+			<div>hangman</div>
+			<img src="assets/hangman.png">
+		</div>
+		</div>
+
+	</div>
+	</div>
+
+	<div id="infoDiv">
+		<h2>Welcome to SquareBrackets!</h2>
+		<h3>Recently added</h3>
+		<ul>
+			<li>Hangman released
+			<li>Yes, it's the same word list as Coolmath Games
+			<li>It works on mobile too, isn't that awesome?
+		</ul>
+		<h3>Todo</h3>
+		<ul>
+			<li>Finish Crab Simulator 2
+			<li>Start work on Super Gnome Fighter?
+		</ul>
+	</div>
+
+	<div id="footerDiv">
+
+		<p class="socialRow"><img src="/assets/twitter.png"><a href="https://twitter.com/brackets_square" target="_blank">@brackets_square</a></p>
+		<p class="socialRow"><img src="/assets/github.png"><a href="https://github.com/RogerCronin" target="_blank">RogerCronin</a></p>
+		<p class="socialRow"><img src="/assets/discord.png"><a href="https://www.discord.com/users/316947582670602240" target="_blank">Roger#4803</a></p>
+
+	</div>
+
+
+</body>
+
+<script>
+
+const id = iden => document.getElementById(iden)
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+
+function updateGameInfo(title, paragraph, link, mobile = false, button = "LAUNCH") {
+	id("gameInfoTitle").innerHTML = title
+	id("gameInfoParagraph").innerHTML = paragraph
+	if(isMobile && !mobile) id("gameInfoParagraph").innerHTML += "<br><span class='darkred'>* Mobile incompatible</span>"
+	id("launchButton").onclick = () => location.href = `/${link}`
+	id("launchButton").innerHTML = button
+}
+
+function clickGame(game) {
+
+	switch(game) {
+		case "jsm":
+			updateGameInfo(
+				"JavaScript Message v4.0",
+				"The fourth iteration of JavaScript Message, a social platform intended for in-school use.",
+				"javascriptmessage",
+				true
+			)
+			break
+		case "gnome":
+			updateGameInfo(
+				"Gnome Fighter+",
+				"A riveting button-mashing fighting game staring Gnome and Anti-Gnome, completely remade with bonus content!",
+				"gnomefighter/plus",
+				true
+			)
+			break
+		case "tetris":
+			updateGameInfo(
+				"Twitch Tetris v2.1",
+				"Twitch Tetris, ported to SquareBrackets with a few quality-of-life improvements. Not affiliated with Twitch.",
+				"twitchtetris"
+			)
+			break
+		case "roulette":
+			updateGameInfo(
+				"Russian Roulette",
+				"The classic party game you know and love, but the \"bullet\" is hearing loss. Earbuds required!",
+				"russianroulette",
+				true
+			)
+			break
+		case "crab web":
+			updateGameInfo(
+				"Crab Simulator v1.4 (web)",
+				"Crab Simulator, ported to the internet for easy access.",
+				"crabsimulator/CrabSimulator1.4"
+			)
+			break
+		case "crab py":
+			updateGameInfo(
+				"Crab Simulator v1.3 (download)",
+				"A download link for Crab Simulator, originally developed on Python 3, then ported to Windows devices.",
+				"crabsimulator/CrabSimulator1.3.zip",
+				false,
+				"DOWNLOAD"
+			)
+			break
+		case "crab tsa":
+			updateGameInfo(
+				"Crab Simulator TSA",
+				"A PG, adventure spinoff of Crab Simulator made for a national competition.",
+				"crabsimulator/CrabSimulatorTSA"
+			)
+			break
+		case "hangman":
+			updateGameInfo(
+				"Hangman",
+				"A swanky hangman player without the scary implications of what \"hangman\" actually represents.",
+				"hangman",
+				true
+			)
+	}
+
+	id("blanketDiv").classList.add("active")
+	id("blanketDiv").style.zIndex = 1
+}
+
+function goBack() {
+	id("blanketDiv").classList.remove("active")
+	setTimeout(() => id("blanketDiv").style.zIndex = -1, 500) // move to back after css transition
+}
+
+</script>
+
+</html>
