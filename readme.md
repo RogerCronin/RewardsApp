@@ -7,6 +7,8 @@
 - Implement `DatabaseManager` into `APIManager`
 - Finish frontend
 - Figure out where points are being stored in the database and ensure point total is queried
+- Write `SessionManager` that can generate and verify session IDs
+- Implement `SessionManager` into `APIManager`
 
 ## Main.java
 
