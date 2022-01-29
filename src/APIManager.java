@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 // contains all api responses
-class APIManager {
+public class APIManager {
     // JSON builder object
     // you may have to import Gson from Maven if this doesn't run on your computer
     static Gson gson = new Gson();
