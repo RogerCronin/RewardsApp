@@ -64,7 +64,7 @@ async function login() {
         const data = await fetchCredentials(usernameInput.value, passwordInput.value)
         if(data.success) {
             sessionStorage.setItem("sessionID", data.sessionID)
-            window.location.replace("./home")
+            window.location.replace("./home/")
         } else {
             displayAlert()
         }
