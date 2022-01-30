@@ -1,0 +1,178 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+:root {
+    --blue: #243E90;
+    --orange: #F47D26;
+    --gray: #979797;
+    --white: #FFFFFF;
+    --red: #DF2935;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    margin: 0;
+}
+
+h1 {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    font-weight: normal;
+    font-size: 2.5em;
+}
+
+h2 {
+    font-family: "Roboto", sans-serif;
+    font-weight: normal;
+    font-size: 1.5em;
+}
+
+label, input, button, p {
+    font-size: 1.25em;
+}
+
+button {
+    border-radius: 8px;
+    border: none;
+    padding: 8px;
+    background-color: var(--orange);
+    color: var(--white);
+}
+
+button {
+    transition: box-shadow ease 0.25s;
+}
+
+button:hover:not([disabled]) {
+    box-shadow: 0 0 0.6em rgb(0, 0, 0, 0.4);
+}
+
+#title {
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    font-weight: bold;
+}
+
+#header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--blue);
+    color: var(--white);
+    text-align: center;
+    height: 100px;
+    width: 100vw;
+}
+
+#content {
+    padding: 1em;
+}
+
+#cardsWrapper {
+    margin-bottom: 2em;
+    padding: 0 3em;
+}
+
+#rewardsWrapper {
+    margin-bottom: 2em;
+    padding: 0 3em;
+}
+
+#cardsDiv {
+    display: flex;
+}
+
+#cardDescription {
+    width: 400px;
+    padding-left: 16px;
+    color: black;
+    text-align: left;
+    margin: 1em 0;
+}
+
+#cardDescription > p, #cardDescription > div > p {
+    margin: 8px;
+}
+
+#cardInfoDiv {
+    width: 550px;
+    height: auto;
+    background-color: var(--white);
+    border-radius: 4em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2em;
+    text-align: center;
+}
+
+#cardInfoDiv > button {
+    width: 450px;
+}
+
+#fullCard {
+    width: 400px;
+    height: 250px;
+    color: var(--white);
+    border-radius: 25px;
+    padding: 10px;
+}
+
+#fullCard > h3 {
+    font-size: 2em;
+}
+
+#fullCard > h4 {
+    font-size: 1.5em;
+    margin-top: -1em;
+}
+
+#fullCard > p {
+    font-size: 2em;
+}
+
+#blanketDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--white);
+    position: fixed;
+    width: 100vw;
+    height: 100%;
+    background-color: rgb(0, 0, 0, 0.8);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity ease 0.5s;
+}
+
+#blanketDiv.active {
+    opacity: 1;
+}
+
+.creditCard, .debitCard {
+    position: relative;
+    top: 0;
+    width: 200px;
+    height: 125px;
+    border-radius: 25px;
+    padding: 10px;
+    text-align: center;
+    color: var(--white);
+    transition: top ease 0.25s, box-shadow ease 0.25s;
+    cursor: pointer;
+    margin-right: 1em;
+}
+
+.creditCard:hover, .debitCard:hover {
+    box-shadow: 0 0 0.6em rgb(0, 0, 0, 0.4);
+    top: -5px;
+}
+
+.creditCard {
+    background-color: var(--blue);
+}
+
+.debitCard {
+    background-color: var(--orange);
+}

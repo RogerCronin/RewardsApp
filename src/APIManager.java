@@ -43,7 +43,8 @@ public class APIManager {
 
     static class GetCardsResponse {
         static class Card {
-            int cardType; // 0 is credit, 1 is debit
+            String cardNumber;
+            boolean isCreditCard;
             double balance;
             double credit; // only for credit cards
             /* might want to use something like a UNIX timestamp if this were
@@ -51,8 +52,9 @@ public class APIManager {
              */
             String billDate; // only for credit cards
             double billAmount; // only for credit cards
-            Card(int cardType, double balance, double credit, String billDate, double billAmount) {
-                this.cardType = cardType;
+            Card(String cardNumber, boolean isCreditCard, double balance, double credit, String billDate, double billAmount) {
+                this.cardNumber = cardNumber;
+                this.isCreditCard = isCreditCard;
                 this.balance = balance;
                 this.credit = credit;
                 this.billDate = billDate;
@@ -67,8 +69,8 @@ public class APIManager {
 
     public static void apiGetCards(HttpExchange ex) {
         GetCardsResponse.Card[] cards = {
-            new GetCardsResponse.Card(0, 50.0, 10.0, "2/22/22", 1.0),
-            new GetCardsResponse.Card(1, 250.0, 0.0, null, 0.0),
+            new GetCardsResponse.Card("5412 8224 6310 0005", true, 50.0, 10.0, "2/22/22", 1.0),
+            new GetCardsResponse.Card("7253 3256 7895 1245", false, 250.0, 0.0, null, 0.0)
         };
         GetCardsResponse gcr = new GetCardsResponse(cards);
         OutputStream out = ex.getResponseBody();
