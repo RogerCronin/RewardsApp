@@ -81,7 +81,7 @@ class ServerHandler implements HttpHandler {
     }
 
     // send request to proper API handler
-    public void apiHandle(HttpExchange ex, String path) {
+    public void apiHandle(HttpExchange ex, String path) throws IOException {
         path = path.substring(5);
         switch(path) {
             case "login" -> APIManager.apiLogin(ex);
