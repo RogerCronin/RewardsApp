@@ -35,7 +35,7 @@ function handleCard() {
     if(isCreditCard) {
         fullCard.style.backgroundColor = "var(--blue)"
         fullCard.children[1].innerHTML = "Credit Card"
-        cardDescription.children[1].style.display = "none"
+        cardDescription.children[1].style.display = "block"
         creditDescriptionFields[0].innerHTML = `Credit: \$${credit}`
         creditDescriptionFields[1].innerHTML = `Next bill: ${billDate}`
         creditDescriptionFields[2].innerHTML = `Total due: \$${billAmount}`
@@ -43,7 +43,7 @@ function handleCard() {
     } else {
         fullCard.style.backgroundColor = "var(--orange)"
         fullCard.children[1].innerHTML = "Debit Card"
-        cardDescription.children[1].style.display = "block"
+        cardDescription.children[1].style.display = "none"
     }
     blanketDiv.classList.add("active") // makes screen go dim
     blanketDiv.style.zIndex = 1 // needed to make screen dimming appear above everything else

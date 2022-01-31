@@ -91,9 +91,8 @@ button:hover:not([disabled]) {
 
 #cardInfoDiv {
     width: 550px;
-    height: auto;
+    height: 100vh;
     background-color: var(--white);
-    border-radius: 4em;
     display: flex;
     flex-direction: column;
     align-items: center;
