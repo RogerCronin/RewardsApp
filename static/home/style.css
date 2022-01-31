@@ -68,12 +68,7 @@ button:hover:not([disabled]) {
     padding: 1em;
 }
 
-#cardsWrapper {
-    margin-bottom: 2em;
-    padding: 0 3em;
-}
-
-#rewardsWrapper {
+#cardsWrapper, #redeemedRewardsWrapper, #rewardsWrapper {
     margin-bottom: 2em;
     padding: 0 3em;
 }

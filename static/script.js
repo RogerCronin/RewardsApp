@@ -13,6 +13,7 @@ const spinnerArray = ["▙", "▛", "▜", "▟"]
 let spinnerFrame = 0
 let spinnerTimeout
 
+// enables or disables the login button
 function toggleButton(on) {
     submitButton.toggleAttribute("disabled")
     usernameInput.toggleAttribute("disabled")
@@ -28,12 +29,14 @@ function toggleButton(on) {
     }
 }
 
+// cycles through a frame of the login spinner
 function cycleSpinner() {
     spinnerFrame++
     if(spinnerFrame === 4) spinnerFrame = 0
     spinnerDiv.innerHTML = spinnerArray[spinnerFrame]
 }
 
+// displays an error alert above the login form
 function displayAlert(text = "Incorrect username or password!") {
     alertP.innerHTML = text
     alertP.style.visibility = "visible"
@@ -57,14 +60,15 @@ async function fetchCredentials(username, password) {
     return await res.json()
 }
 
+// attempts a login
 async function login() {
     toggleButton(false)
     await sleep(1000)
     try {
         const data = await fetchCredentials(usernameInput.value, passwordInput.value)
         if(data.success) {
-            sessionStorage.setItem("sessionID", data.sessionID)
-            window.location.replace("./home/")
+            sessionStorage.setItem("sessionID", data.sessionID) // set returned sessionID into browser session storage
+            window.location.replace("./home/") // go to /home
         } else {
             displayAlert()
         }

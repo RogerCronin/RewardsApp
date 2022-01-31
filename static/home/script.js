@@ -1,27 +1,34 @@
+// page elements
 const cardsDiv = document.getElementById("cardsDiv")
 const blanketDiv = document.getElementById("blanketDiv")
 const fullCard = document.getElementById("fullCard")
 const cardDescription = document.getElementById("cardDescription")
 const creditDescriptionFields = cardDescription.children[1].children
 
+// if you aren't logged in, go to landing page
 if(!sessionStorage.getItem("sessionID")) window.location.replace("/")
 
+getDataOnLoad() // fetch all of the dynamic content
+
+// creates a card component and appends it to cardDiv
 function makeCard(data) {
-    const { cardNumber, isCreditCard, balance, credit, billDate, billAmount } = data
-    let cardDiv = document.createElement("div")
+    const { cardNumber, isCreditCard } = data
+    let card = document.createElement("div")
     if(isCreditCard) {
-        cardDiv.classList.add("creditCard")
-        cardDiv.innerHTML = `<h3>Credit Card</h3><p>${cardNumber}</p>`
+        card.classList.add("creditCard")
+        card.innerHTML = `<h3>Credit Card</h3><p>${cardNumber}</p>`
     } else {
-        cardDiv.classList.add("debitCard")
-        cardDiv.innerHTML = `<h3>Debit Card</h3><p>${cardNumber}</p>`
+        card.classList.add("debitCard")
+        card.innerHTML = `<h3>Debit Card</h3><p>${cardNumber}</p>`
     }
-    cardDiv.data = data
-    cardDiv.onclick = handleCard
-    cardsDiv.append(cardDiv)
+    card.data = data // attach all card data to the card element for usage in handleCard
+    card.onclick = handleCard
+    cardsDiv.append(card)
 }
 
+// when card is clicked, show info box
 function handleCard() {
+    // most of this code is just setting html elements to fit data from card.data
     const { cardNumber, isCreditCard, balance, credit, billDate, billAmount } = this.data
     fullCard.children[2].innerHTML = cardNumber
     cardDescription.children[0].innerHTML = `Balance: \$${balance}`
@@ -38,32 +45,47 @@ function handleCard() {
         fullCard.children[1].innerHTML = "Debit Card"
         cardDescription.children[1].style.display = "block"
     }
-    blanketDiv.classList.add("active")
-    blanketDiv.style.zIndex = 1
+    blanketDiv.classList.add("active") // makes screen go dim
+    blanketDiv.style.zIndex = 1 // needed to make screen dimming appear above everything else
 }
 
+// when back button on info box is clicked
 function goBack() {
     blanketDiv.classList.remove("active")
     setTimeout(() => blanketDiv.style.zIndex = -1, 500) // move to back after css transition
 }
 
-const creditCard = {
-    cardNumber: "4000 3000 2000 1000",
-    isCreditCard: true,
-    balance: 200,
-    credit: 50,
-    billDate: "2/2/2022",
-    billAmount: 20
+/* response format
+{
+    success: boolean,
+    cards: [
+        {
+            cardNumber: string,
+            isCreditCard: boolean,
+            balance: double,
+            credit: double, // everything below this is for credit cards only
+            billDate: string,
+            billAmount: string
+        }
+    ]
+*/
+async function fetchCards(sessionID) {
+    const res = await fetch("/api/getCards", {
+        method: "POST",
+        body: JSON.stringify({
+            sessionID: sessionID
+        })
+    })
+    if(!res.ok) throw new Error(res.statusText)
+    return await res.json()
 }
 
-const debitCard = {
-    cardNumber: "1000 2000 3000 4000",
-    isCreditCard: false,
-    balance: 400,
-    credit: 0,
-    billDate: null,
-    billAmount: 0
+async function getDataOnLoad(sessionID) {
+    const cardData = await fetchCards(sessionStorage.getItem("sessionID"))
+    if(!cardData.success) {
+        alert("Invalid session ID, returning to landing page")
+        window.location.replace("/")
+    } else {
+        cardData.cards.forEach(c => makeCard(c))
+    }
 }
-
-makeCard(creditCard)
-makeCard(debitCard)
