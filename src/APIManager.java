@@ -82,7 +82,6 @@ public class APIManager {
 
     static class GetCardsResponse {
         static class Card {
-            boolean success;
             String cardNumber;
             boolean isCreditCard;
             double balance;
@@ -92,8 +91,7 @@ public class APIManager {
              */
             String billDate; // only for credit cards
             double billAmount; // only for credit cards
-            Card(boolean success, String cardNumber, boolean isCreditCard, double balance, double credit, String billDate, double billAmount) {
-                this.success = success;
+            Card(String cardNumber, boolean isCreditCard, double balance, double credit, String billDate, double billAmount) {
                 this.cardNumber = cardNumber;
                 this.isCreditCard = isCreditCard;
                 this.balance = balance;
@@ -102,18 +100,20 @@ public class APIManager {
                 this.billAmount = billAmount;
             }
         }
+        boolean success;
         Card[] cards;
-        GetCardsResponse(Card[] cards) {
+        GetCardsResponse(boolean success, Card[] cards) {
+            this.success = success;
             this.cards = cards;
         }
     }
 
     public static void apiGetCards(HttpExchange ex) {
         GetCardsResponse.Card[] cards = {
-            new GetCardsResponse.Card(true, "5412 8224 6310 0005", true, 50.0, 10.0, "2/22/22", 1.0),
-            new GetCardsResponse.Card(true, "7253 3256 7895 1245", false, 250.0, 0.0, null, 0.0)
+            new GetCardsResponse.Card("5412 8224 6310 0005", true, 50.0, 10.0, "2/22/22", 1.0),
+            new GetCardsResponse.Card("7253 3256 7895 1245", false, 250.0, 0.0, null, 0.0)
         };
-        GetCardsResponse gcr = new GetCardsResponse(cards);
+        GetCardsResponse gcr = new GetCardsResponse(true, cards);
         OutputStream out = ex.getResponseBody();
         String json = gson.toJson(gcr); // convert LoginResponse instance to JSON string
         try {
