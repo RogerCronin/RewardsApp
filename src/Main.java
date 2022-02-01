@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.URI;
 import java.nio.file.Files;
 
 public class Main {
@@ -37,10 +36,8 @@ class ServerHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange ex) throws IOException {
 
-        // get requested file path and clean it up
-        URI uri = ex.getRequestURI();
-        String filePath = new File(uri.getPath()).getPath();
-        if(filePath.endsWith("/")) filePath = filePath.substring(0, filePath.length() - 1);
+        // get requested file path
+        String filePath = ex.getRequestURI().getPath();
 
         // if it should be handled by api instead of static site handler, do that
         if(!ex.getRequestMethod().equals("GET") || ServerHandler.isAPIRequest(filePath)) {
@@ -84,7 +81,7 @@ class ServerHandler implements HttpHandler {
     }
 
     // send request to proper API handler
-    public void apiHandle(HttpExchange ex, String path) {
+    public void apiHandle(HttpExchange ex, String path) throws IOException {
         path = path.substring(5);
         switch(path) {
             case "login" -> APIManager.apiLogin(ex);

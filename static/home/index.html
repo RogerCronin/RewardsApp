@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CD Banking</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type="image/png" href="/favicon.png">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <div id="blanketDiv">
+        <div id="cardInfoDiv">
+            <div id="fullCard">
+                <h3>CD Banking</h3>
+                <h4>Card Type</h4>
+                <p>0000 0000 0000 0000</p>
+            </div>
+            <div id="cardDescription">
+                <p>Balance: $0</p>
+                <div>
+                    <p>Credit: $0</p>
+                    <p>Next bill: 1/1/1980</p>
+                    <p>Total due: $0</p>
+                    <p>Minimum payment: $0</p>
+                </div>
+            </div>
+            <button id="backButton" onclick="goBack()">Back</button>
+        </div>
+    </div>
+
+    <div id="header">
+        <h1>CD Banking</h1>
+        <div id="headerOptions">
+            <p>Transactions</p>
+            <p onclick="sessionStorage.removeItem('sessionID');window.location.replace('/')">Logout</p>
+        </div>
+    </div>
+
+    <div id="content">
+        <div id="cardsWrapper">
+            <h2>My Cards</h2>
+            <div id="cardsDiv"></div>
+        </div>
+        <hr>
+        <div id="redeemedRewardsWrapper">
+            <h2>My Rewards</h2>
+        </div>
+        <hr>
+        <div id="rewardsWrapper">
+            <h2>Rewards Shop - <span id="pointsSpan">Loading points...</span></h2>
+        </div>
+    </div>
+
+</body>
+
+
+</html>
