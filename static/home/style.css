@@ -64,6 +64,20 @@ button:hover:not([disabled]) {
     width: 100vw;
 }
 
+#headerOptions {
+    position: absolute;
+    text-align: right;
+    right: 1em;
+}
+
+#headerOptions > p {
+    cursor: pointer;
+}
+
+#headerOptions > p:hover {
+    text-decoration: underline;
+}
+
 #content {
     padding: 1em;
 }
