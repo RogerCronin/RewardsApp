@@ -3,8 +3,8 @@
 `/static` is where the static files for the website are located. The webserver can be run by clicking `run.bat` or the `server.jar` file located in the root directory. It is a basic webserver that tries to service API calls if the URI is pointing to an api endpoint, otherwise serves static files.
 
 **TODO:**
-- Write `DatabaseConnectivity.DatabaseManager` that can query and set information in the database
-- Implement `DatabaseConnectivity.DatabaseManager` into `APIManager`
+- Write `DDatabaseManager` that can query and set information in the database
+- Implement `DatabaseManager` into `APIManager`
 - Finish frontend
 - Figure out where points are being stored in the database and ensure point total is queried
 - Write `SessionManager` that can generate and verify session IDs
