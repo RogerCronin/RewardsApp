@@ -1,8 +1,12 @@
+import com.mysql.cj.jdbc.exceptions.SQLError;
+
 import java.sql.*;
 
 public class DatabaseManager {
     public static void main(String[] args) {
-        verifyInfo("JohnSmith", "1234");
+        String username = "JohnSmith";
+        String password = "1234";
+        returnID(username, password);
 //        try {
 //            String url = "jdbc:postgresql://localhost:5432/JJR";
 //            String username = "postgres";
@@ -49,44 +53,33 @@ public class DatabaseManager {
 //        }
     }
 
-    public static void verifyInfo(String usrn, String psw) {
+    public static void returnID(String usr, String psw) {
 
         try {
-            String url = "jdbc:postgresql://localhost:5432/JJR";
-            String root = "postgres";
-            String key = "@$ept1213dE";
+            int account_id;
+            String myUrl = "jdbc:mysql://127.0.0.1:3306/?user=root";
 
-            Connection conn = DriverManager.getConnection(url, root, key);
+            Connection conn = DriverManager.getConnection(myUrl, "root","password");
             System.out.println("Connected to the server");
 
-            String query = "SELECT username, password FROM users";
+            PreparedStatement pstat = conn.prepareStatement("SELECT account_id FROM users"
+                    + " WHERE username = " + "\"?\"" + " AND WHERE password = \"?\"");
 
-            Statement st = conn.createStatement();
+            pstat.setString(1, usr);
+            pstat.setString(2, psw);
 
-            ResultSet rs = st.executeQuery(query);
+            ResultSet rs = pstat.executeQuery();
 
-            while (rs.next()) {
-                String username = rs.getString("username");
-                String password = rs.getString("password");
+            account_id = rs.getInt("account_id");
 
-                if (usrn.equals(username)) {
-                    System.out.println("Username found.");
-                } else {
-                    System.out.println("No valid username match.");
-                }
-
-                if (psw.equals(password)) {
-                    System.out.println("Password found.");
-                } else {
-                    System.out.println("No valid password match.");
-                }
-            }
-            st.close();
-            conn.close();
+            System.out.println("Account ID for user " + usr
+            + "is " + account_id);
         } catch (SQLException sqle) {
             sqle.printStackTrace();
+        } catch (IndexOutOfBoundsException ee) {
+            ee.printStackTrace();
+            System.out.println("No information found.");
         }
-
     }
 
 }
