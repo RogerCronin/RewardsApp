@@ -1,12 +1,14 @@
-import com.mysql.cj.jdbc.exceptions.SQLError;
+
 
 import java.sql.*;
 
 public class DatabaseManager {
+    static final String url = "jdbc:mysql://127.0.0.1:3306/?user=root";
+    static final String user = "root";
+    static final String pass = "password";
+    static String query = "SELECT account_id FROM users WHERE username = 1 AND password = 2";
     public static void main(String[] args) {
-        String username = "JohnSmith";
-        String password = "1234";
-        returnID(username, password);
+        returnId("JohnSmith", "1234");
 //        try {
 //            String url = "jdbc:postgresql://localhost:5432/JJR";
 //            String username = "postgres";
@@ -53,32 +55,20 @@ public class DatabaseManager {
 //        }
     }
 
-    public static void returnID(String usr, String psw) {
-
-        try {
-            int account_id;
-            String myUrl = "jdbc:mysql://127.0.0.1:3306/?user=root";
-
-            Connection conn = DriverManager.getConnection(myUrl, "root","password");
-            System.out.println("Connected to the server");
-
-            PreparedStatement pstat = conn.prepareStatement("SELECT account_id FROM users"
-                    + " WHERE username = " + "\"?\"" + " AND WHERE password = \"?\"");
-
-            pstat.setString(1, usr);
-            pstat.setString(2, psw);
-
-            ResultSet rs = pstat.executeQuery();
-
-            account_id = rs.getInt("account_id");
-
-            System.out.println("Account ID for user " + usr
-            + "is " + account_id);
+    public static void returnId(String username, String password) {
+        query.replace("1", username);
+        query.replace("2", password);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement()
+             ) {
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                System.out.println("ID: " + rs.getInt("account_id"));
+                System.out.println("UN: " + rs.getString("username"));
+                System.out.println("PW: " + rs.getString("password"));
+            }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
-        } catch (IndexOutOfBoundsException ee) {
-            ee.printStackTrace();
-            System.out.println("No information found.");
         }
     }
 
