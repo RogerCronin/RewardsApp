@@ -28,6 +28,7 @@ public class Main {
 class ServerHandler implements HttpHandler {
     // where all the files from our static server will be located
     String baseDirectory;
+    APIManager api = new APIManager();
 
     ServerHandler(String baseDirectory) {
         this.baseDirectory = baseDirectory;
@@ -81,13 +82,13 @@ class ServerHandler implements HttpHandler {
     }
 
     // send request to proper API handler
-    public void apiHandle(HttpExchange ex, String path) throws IOException {
+    public void apiHandle(HttpExchange ex, String path) {
         path = path.substring(5);
         switch(path) {
-            case "login" -> APIManager.apiLogin(ex);
-            case "getCards" -> APIManager.apiGetCards(ex);
-            case "getRewards" -> APIManager.apiGetRewards(ex);
-            case "redeemReward" -> APIManager.apiRedeemReward(ex);
+            case "login" -> api.apiLogin(ex);
+            case "getCards" -> api.apiGetCards(ex);
+            case "getRewards" -> api.apiGetRedeemedRewards(ex);
+            case "redeemReward" -> api.apiRedeemReward(ex);
             default -> { // this should never happen, but just in case
                 try {
                     OutputStream out = ex.getResponseBody();

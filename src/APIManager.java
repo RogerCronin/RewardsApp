@@ -1,3 +1,7 @@
+import APIObjects.GetCardsResponse;
+import APIObjects.GetRedeemedRewardsResponse;
+import APIObjects.GetSessionIDResponse;
+
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -10,15 +14,11 @@ public class APIManager {
     // JSON builder object
     // you may have to import Gson from Maven if this doesn't run on your computer
     static Gson gson = new Gson();
+    static APIReturnable db = new TestDatabaseManager();
+    //static DatabaseManager db = new DatabaseManager();
 
-    // response format for the /login endpoint
-    static class LoginOutput {
-        boolean success;
-        String sessionID;
-        LoginOutput(boolean success, String sessionID) {
-            this.success = success;
-            this.sessionID = sessionID;
-        }
+    public APIManager() {
+        //db.init();
     }
 
     static class LoginInput {
@@ -26,119 +26,76 @@ public class APIManager {
         String password;
     }
 
-    public static void apiLogin(HttpExchange ex) throws IOException {
-        // TODO implement proper responses
-        // connect to database and send false when incorrect username + password
-        // for now I'm just sending over example data so I can keep working on the frontend
-        // do session manager later bc it's complicated and idk how to do it yet
-        // if you want to make it ask me and I can send over my idea for what it should be
+    static class RequestInput {
+        String sessionID;
+    }
 
-        OutputStream out = ex.getResponseBody();
-        LoginInput in;
-
+    public <T> T getRequestInput(HttpExchange ex, OutputStream out, Class<T> inputClass) throws Exception {
         try {
             String responseText = new String(ex.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-            in = gson.fromJson(responseText, LoginInput.class);
+            return gson.fromJson(responseText, inputClass);
         } catch(IOException e) {
             ex.sendResponseHeaders(400, 0);
             out.write("400 Malformed response body".getBytes());
             out.close();
-            return;
-        }
-
-        // TODO check username and password
-        if(in.username.equals("asdf") && in.password.equals("1234")) {
-            // create json string
-            LoginOutput lr = new LoginOutput(true, "abc");
-            String json = gson.toJson(lr); // convert LoginResponse instance to JSON string
-
-            try {
-                // send over the JSON data
-                ex.sendResponseHeaders(200, json.length());
-                ex.getResponseHeaders().add("Content-Type", "application/json");
-                out.write(json.getBytes());
-                out.close();
-            } catch(IOException e) {
-                System.out.println("Error at apiLogin! - send success");
-                e.printStackTrace();
-            }
-
-        } else {
-            LoginOutput lr = new LoginOutput(false, null);
-            String json = gson.toJson(lr);
-
-            try {
-                ex.sendResponseHeaders(200, json.length());
-                ex.getResponseHeaders().add("Content-Type", "application/json");
-                out.write(json.getBytes());
-                out.close();
-            } catch(IOException e) {
-                System.out.println("Error at apiLogin! - send failure");
-                e.printStackTrace();
-            }
-
+            throw new Exception("Malformed response body");
         }
     }
 
-    static class GetCardsResponse {
-        static class Card {
-            String cardNumber;
-            boolean isCreditCard;
-            double balance;
-            double credit; // only for credit cards
-            /* might want to use something like a UNIX timestamp if this were
-            a real project, but a hardcoded String value is fine for now
-             */
-            String billDate; // only for credit cards
-            double billAmount; // only for credit cards
-            Card(String cardNumber, boolean isCreditCard, double balance, double credit, String billDate, double billAmount) {
-                this.cardNumber = cardNumber;
-                this.isCreditCard = isCreditCard;
-                this.balance = balance;
-                this.credit = credit;
-                this.billDate = billDate;
-                this.billAmount = billAmount;
-            }
-        }
-        boolean success;
-        Card[] cards;
-        GetCardsResponse(boolean success, Card[] cards) {
-            this.success = success;
-            this.cards = cards;
-        }
+    public RequestInput getRequestInput(HttpExchange ex, OutputStream out) throws Exception {
+        return getRequestInput(ex, out, RequestInput.class);
     }
 
-    public static void apiGetCards(HttpExchange ex) {
-        GetCardsResponse.Card[] cards = {
-            new GetCardsResponse.Card("5412 8224 6310 0005", true, 50.0, 10.0, "2/22/22", 1.0),
-            new GetCardsResponse.Card("7253 3256 7895 1245", false, 250.0, 0.0, null, 0.0)
-        };
-        GetCardsResponse gcr = new GetCardsResponse(true, cards);
-        OutputStream out = ex.getResponseBody();
-        String json = gson.toJson(gcr); // convert LoginResponse instance to JSON string
-        try {
+    public static void sendResponse(HttpExchange ex, OutputStream out, Object object) {
+        String json = gson.toJson(object);
+        try(out) {
             // send over the JSON data
             ex.sendResponseHeaders(200, json.length());
             ex.getResponseHeaders().add("Content-Type", "application/json");
             out.write(json.getBytes());
-            out.close();
-        } catch(IOException e) {
-            System.out.println("Error at apiLogin!");
+        } catch (IOException e) {
+            System.out.println("Error at sendResponse!");
             e.printStackTrace();
         }
     }
 
-    // TODO implement GetRewardsResponse
-    // and also apiGetRewards()
+    public void apiLogin(HttpExchange ex) {
+        OutputStream out = ex.getResponseBody();
+        LoginInput in;
+        try {
+            in = getRequestInput(ex, out, LoginInput.class);
+        } catch(Exception e) { return; }
+        GetSessionIDResponse res = db.getSessionID(in.username, in.password);
+        sendResponse(ex, out, res);
+    }
 
-    public static void apiGetRewards(HttpExchange ex) {
+    public void apiGetPoints(HttpExchange ex) {
 
     }
 
-    // TODO implement RedeemRewardResponse
-    // apiRedeemReward() too
+    public void apiGetCards(HttpExchange ex) {
+        OutputStream out = ex.getResponseBody();
+        RequestInput in;
+        try {
+            in = getRequestInput(ex, out);
+        } catch(Exception e) { return; }
 
-    public static void apiRedeemReward(HttpExchange ex) {
+        GetCardsResponse res = db.getCards(in.sessionID);
+        sendResponse(ex, out, res);
+    }
+
+    public void apiGetRedeemedRewards(HttpExchange ex) {
+        OutputStream out = ex.getResponseBody();
+        RequestInput in;
+        try {
+            in = getRequestInput(ex, out);
+        } catch(Exception e) { return; }
+
+        GetRedeemedRewardsResponse res = db.getRedeemedRewards(in.sessionID);
+        sendResponse(ex, out, res);
+    }
+
+    public void apiRedeemReward(HttpExchange ex) {
 
     }
 }
