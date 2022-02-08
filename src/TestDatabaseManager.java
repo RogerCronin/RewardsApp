@@ -15,13 +15,16 @@ public class TestDatabaseManager implements APIReturnable {
     }
 
     public GetCardsResponse getCards(String sessionID) {
+        System.out.println("abc");
         if(sm.getAccountID(sessionID).equals(testAccountID)) {
             Card[] cards = {
                     new Card("5412 8224 6310 0005", true, 50.0, 10.0, "2/22/22", 1.0),
                     new Card("7253 3256 7895 1245", false, 250.0, 0.0, null, 0.0)
             };
+            System.out.println(true);
             return new GetCardsResponse(true, cards);
         } else {
+            System.out.println(false);
             return new GetCardsResponse(false, null);
         }
     }
