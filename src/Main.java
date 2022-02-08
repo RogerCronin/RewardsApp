@@ -87,8 +87,11 @@ class ServerHandler implements HttpHandler {
         switch(path) {
             case "login" -> api.apiLogin(ex);
             case "getCards" -> api.apiGetCards(ex);
-            case "getRewards" -> api.apiGetRedeemedRewards(ex);
+            case "getRedeemedRewards" -> api.apiGetRedeemedRewards(ex);
             case "redeemReward" -> api.apiRedeemReward(ex);
+            case "getTransactions" -> api.apiGetTransactions(ex);
+            case "getPoints" -> api.apiGetPoints(ex);
+            case "getRewards" -> api.apiGetRewards(ex);
             default -> { // this should never happen, but just in case
                 try {
                     OutputStream out = ex.getResponseBody();

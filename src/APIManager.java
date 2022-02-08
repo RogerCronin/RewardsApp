@@ -1,6 +1,4 @@
-import APIObjects.GetCardsResponse;
-import APIObjects.GetRedeemedRewardsResponse;
-import APIObjects.GetSessionIDResponse;
+import APIObjects.*;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
@@ -92,6 +90,28 @@ public class APIManager {
         } catch(Exception e) { return; }
 
         GetRedeemedRewardsResponse res = db.getRedeemedRewards(in.sessionID);
+        sendResponse(ex, out, res);
+    }
+
+    public void apiGetRewards(HttpExchange ex) {
+        OutputStream out = ex.getResponseBody();
+        RequestInput in;
+        try {
+            in = getRequestInput(ex, out);
+        } catch(Exception e) { return; }
+
+        GetRewardsResponse res = db.getRewards(in.sessionID);
+        sendResponse(ex, out, res);
+    }
+
+    public void apiGetTransactions(HttpExchange ex) {
+        OutputStream out = ex.getResponseBody();
+        RequestInput in;
+        try {
+            in = getRequestInput(ex, out);
+        } catch(Exception e) { return; }
+
+        GetTransactionsResponse res = db.getTransactions(in.sessionID);
         sendResponse(ex, out, res);
     }
 
