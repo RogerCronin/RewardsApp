@@ -1,11 +1,9 @@
-import APIObjects.GetCardsResponse;
-import APIObjects.GetRedeemedRewardsResponse;
-import APIObjects.GetTransactionsResponse;
-import APIObjects.GetSessionIDResponse;
+import APIObjects.*;
 
 import APIObjects.GetCardsResponse.Card;
 import APIObjects.GetRedeemedRewardsResponse.RedeemedReward;
 import APIObjects.GetTransactionsResponse.Transaction;
+import APIObjects.GetRewardsResponse.Reward;
 
 public class TestDatabaseManager implements APIReturnable {
     SessionManager sm = new SessionManager();
@@ -31,12 +29,40 @@ public class TestDatabaseManager implements APIReturnable {
     public GetRedeemedRewardsResponse getRedeemedRewards(String sessionID) {
         if(sm.getAccountID(sessionID).equals(testAccountID)) {
             RedeemedReward[] rewards = {
-                    new RedeemedReward("2/4/2022", 0),
-                    new RedeemedReward("2/4/2022", 1)
+                    new RedeemedReward("2/4/2022", "Code: 123456789",0),
+                    new RedeemedReward("2/4/2022", "Voucher ID: 987654321", 1)
             };
             return new GetRedeemedRewardsResponse(true, rewards);
         } else {
             return new GetRedeemedRewardsResponse(false, null);
+        }
+    }
+
+    public GetRewardsResponse getRewards(String sessionID) {
+        if(sm.getAccountID(sessionID).equals(testAccountID)) {
+            Reward[] rewards = {
+                    new Reward(
+                            0,
+                            "$50 Wawa Gift Card",
+                            "$50 gift card for usage at any Wawa location.",
+                            50
+                    ),
+                    new Reward(
+                            1,
+                            "1000 CD Airlines Miles",
+                            "Voucher for 1000 airplane travel miles for CD Airlines.",
+                            5000
+                    ),
+                    new Reward(
+                            2,
+                            "$50 gas voucher",
+                            "Voucher for $50 at participating Wawa, Shell, and Valero locations.",
+                            50
+                    )
+            };
+            return new GetRewardsResponse(true, rewards);
+        } else {
+            return new GetRewardsResponse(false, null);
         }
     }
 

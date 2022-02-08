@@ -3,6 +3,7 @@ package APIObjects;
 public class GetRedeemedRewardsResponse {
     public record RedeemedReward(
         String dateRedeemed,
+        String information, // something like a gift card code, voucher ID, etc.
         int rewardID
     ) {}
     boolean success;

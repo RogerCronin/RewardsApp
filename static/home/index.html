@@ -7,19 +7,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/png" href="/favicon.png">
+    <script src="cards.js" defer></script>
+    <script src="rewards.js" defer></script>
     <script src="script.js" defer></script>
 </head>
 
 <body>
 
     <div id="blanketDiv">
-        <div id="cardInfoDiv">
-            <div id="fullCard">
+        <div id="cardInfoDiv" class="infoDiv">
+            <div id="fullCard" class="fullCard">
                 <h3>CD Banking</h3>
                 <h4>Card Type</h4>
                 <p>0000 0000 0000 0000</p>
             </div>
-            <div id="cardDescription">
+            <div id="cardDescription" class="infoDescription">
                 <p>Balance: $0</p>
                 <div>
                     <p>Credit: $0</p>
@@ -28,7 +30,26 @@
                     <p>Minimum payment: $0</p>
                 </div>
             </div>
-            <button id="backButton" onclick="goBack()">Back</button>
+            <button onclick="goBack()">Back</button>
+        </div>
+
+        <div id="redeemedRewardInfoDiv" class="infoDiv" style="display:none">
+            <div id="redeemedRewardDescription" class="infoDescription">
+                <h3>Reward Type</h3>
+                <p>Redeemed 1/1/1980</p>
+                <p>Reward information</p>
+            </div>
+            <button onclick="goBack()">Back</button>
+        </div>
+
+        <div id="rewardInfoDiv" class="infoDiv" style="display:none">
+            <div id="rewardDescription" class="infoDescription">
+                <h3>Reward Type</h3>
+                <p>0 points</p>
+                <p>Reward information</p>
+            </div>
+            <button id="redeemButton" onclick="redeemReward()">Redeem</button>
+            <button onclick="goBack()">Back</button>
         </div>
     </div>
 
@@ -41,17 +62,19 @@
     </div>
 
     <div id="content">
-        <div id="cardsWrapper">
+        <div id="cardsWrapper" class="wrapper">
             <h2>My Cards</h2>
-            <div id="cardsDiv"></div>
+            <div id="cardsDiv" class="cardDiv"></div>
         </div>
         <hr>
-        <div id="redeemedRewardsWrapper">
+        <div id="redeemedRewardsWrapper" class="wrapper">
             <h2>My Rewards</h2>
+            <div id="redeemedRewardsDiv" class="cardDiv"></div>
         </div>
         <hr>
-        <div id="rewardsWrapper">
+        <div id="rewardsWrapper" class="wrapper">
             <h2>Rewards Shop - <span id="pointsSpan">Loading points...</span></h2>
+            <div id="rewardsDiv" class="cardDiv"></div>
         </div>
     </div>
 
