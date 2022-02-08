@@ -7,7 +7,7 @@ public class DatabaseManager {
     static final String user = "root";
     static final String pass = "password";
     public static void main(String[] args) {
-        returnId("JohnSmith", "1234");
+        infoExists("rat", "1");
 //        try {
 //            String url = "jdbc:postgresql://localhost:5432/JJR";
 //            String username = "postgres";
@@ -52,6 +52,41 @@ public class DatabaseManager {
 //            System.out.println("Error connecting to the server");
 //            e.printStackTrace();
 //        }
+    }
+
+    public static boolean infoExists(String username, String password) {
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement()
+        ) {
+            String query = "SELECT account_id FROM rewardsapp.users WHERE EXISTS (SELECT username FROM users" +
+                    "WHERE username = \"" + username + "\" AND password = \"" + password + "\");";
+
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                System.out.println("true");
+                return true;
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        System.out.println("false");
+        return false;
+    }
+
+    public static void returnIdentification(String username, String password) {
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement()
+        ) {
+            String query = "SELECT * FROM rewardsapp.users WHERE username = "
+                    + "\"" + username + "\"" + " AND password = \"" + password + "\";";
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                System.out.println("ID: " + rs.getInt("account_id"));
+                System.out.println("USERNAME: " + rs.getString("username"));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
     }
 
     public static void returnId(String username, String password) {
