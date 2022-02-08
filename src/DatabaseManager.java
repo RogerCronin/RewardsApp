@@ -58,14 +58,11 @@ public class DatabaseManager {
         try (Connection conn = DriverManager.getConnection(url, user, pass);
              Statement stmt = conn.createStatement()
              ) {
-            String query = "SELECT * FROM rewardsapp.users WHERE username = "
+            String query = "SELECT account_id FROM rewardsapp.users WHERE username = "
                     + "\"" + username + "\"" + " AND password = \"" + password + "\";";
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 System.out.println("ID: " + rs.getInt("account_id"));
-                System.out.println("UN: " + rs.getString("username"));
-                System.out.println("PW: " + rs.getString("password"));
-                System.out.println("EMAIL: " + rs.getString("email"));
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
