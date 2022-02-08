@@ -7,6 +7,8 @@
     --gray: #979797;
     --white: #FFFFFF;
     --red: #DF2935;
+    --green: #566E3D;
+    --teal: #0F7173;
 }
 
 body {
@@ -37,6 +39,7 @@ button {
     padding: 8px;
     background-color: var(--orange);
     color: var(--white);
+    margin-bottom: 1em;
 }
 
 button {
@@ -45,6 +48,10 @@ button {
 
 button:hover:not([disabled]) {
     box-shadow: 0 0 0.6em rgb(0, 0, 0, 0.4);
+}
+
+#redeemButton {
+    background-color: var(--teal);
 }
 
 #title {
@@ -82,16 +89,16 @@ button:hover:not([disabled]) {
     padding: 1em;
 }
 
-#cardsWrapper, #redeemedRewardsWrapper, #rewardsWrapper {
+.wrapper {
     margin-bottom: 2em;
     padding: 0 3em;
 }
 
-#cardsDiv {
+.cardDiv {
     display: flex;
 }
 
-#cardDescription {
+.infoDiv > .infoDescription {
     width: 400px;
     padding-left: 16px;
     color: black;
@@ -103,11 +110,11 @@ button:hover:not([disabled]) {
     margin: 8px;
 }
 
-#cardInfoDiv {
+.infoDiv {
     width: 550px;
     height: 100vh;
     background-color: var(--white);
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -115,11 +122,11 @@ button:hover:not([disabled]) {
     text-align: center;
 }
 
-#cardInfoDiv > button {
+.infoDiv > button {
     width: 450px;
 }
 
-#fullCard {
+.fullCard {
     width: 400px;
     height: 250px;
     color: var(--white);
@@ -127,17 +134,28 @@ button:hover:not([disabled]) {
     padding: 10px;
 }
 
-#fullCard > h3 {
+.fullCard > h3 {
     font-size: 2em;
 }
 
-#fullCard > h4 {
+.fullCard > h4 {
     font-size: 1.5em;
     margin-top: -1em;
 }
 
-#fullCard > p {
+.fullCard > p {
     font-size: 2em;
+}
+
+#rewardDescription > h3 {
+    font-size: 2em;
+    text-align: center;
+}
+
+#rewardDescription > p:nth-child(2) {
+    text-align: center;
+    color: var(--gray);
+    margin-top: -1em;
 }
 
 #blanketDiv {
@@ -158,7 +176,7 @@ button:hover:not([disabled]) {
     opacity: 1;
 }
 
-.creditCard, .debitCard {
+.card {
     position: relative;
     top: 0;
     width: 200px;
@@ -172,7 +190,7 @@ button:hover:not([disabled]) {
     margin-right: 1em;
 }
 
-.creditCard:hover, .debitCard:hover {
+.card:hover {
     box-shadow: 0 0 0.6em rgb(0, 0, 0, 0.4);
     top: -5px;
 }
@@ -183,4 +201,8 @@ button:hover:not([disabled]) {
 
 .debitCard {
     background-color: var(--orange);
+}
+
+.rewardCard {
+    background-color: var(--green);
 }
