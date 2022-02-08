@@ -3,10 +3,9 @@
 import java.sql.*;
 
 public class DatabaseManager {
-    static final String url = "jdbc:mysql://127.0.0.1:3306/?user=root";
+    static final String url = "jdbc:mysql://localhost:3306/?user=root";
     static final String user = "root";
     static final String pass = "password";
-    static String query = "SELECT account_id FROM users WHERE username = 1 AND password = 2";
     public static void main(String[] args) {
         returnId("JohnSmith", "1234");
 //        try {
@@ -56,16 +55,17 @@ public class DatabaseManager {
     }
 
     public static void returnId(String username, String password) {
-        query.replace("1", username);
-        query.replace("2", password);
         try (Connection conn = DriverManager.getConnection(url, user, pass);
              Statement stmt = conn.createStatement()
              ) {
+            String query = "SELECT * FROM rewardsapp.users WHERE username = "
+                    + "\"" + username + "\"" + " AND password = \"" + password + "\";";
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 System.out.println("ID: " + rs.getInt("account_id"));
                 System.out.println("UN: " + rs.getString("username"));
                 System.out.println("PW: " + rs.getString("password"));
+                System.out.println("EMAIL: " + rs.getString("email"));
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
