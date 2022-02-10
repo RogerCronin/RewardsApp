@@ -6,4 +6,5 @@ public interface APIReturnable {
     GetRedeemedRewardsResponse getRedeemedRewards(String sessionID);
     GetTransactionsResponse getTransactions(String sessionID);
     GetRewardsResponse getRewards(String sessionID);
+    GetPointsResponse getPoints(String sessionID);
 }

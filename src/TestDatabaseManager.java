@@ -100,4 +100,13 @@ public class TestDatabaseManager implements APIReturnable {
             return new GetTransactionsResponse(false, null);
         }
     }
+
+    // called whenever the user gets their reward points count
+    public GetPointsResponse getPoints(String sessionID) {
+        if(sm.getAccountID(sessionID).equals(testAccountID)) {
+            return new GetPointsResponse(true, 9999);
+        } else {
+            return new GetPointsResponse(false, 0);
+        }
+    }
 }

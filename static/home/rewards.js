@@ -51,13 +51,13 @@ async function fetchRewards(sessionID) {
 
 // creates a card component and appends it to cardDiv
 function makeRedeemedReward(data) {
-    const { rewardID } = data
+    const { rewardID, dateRedeemed } = data
     let card = document.createElement("div")
-    card.classList.add("card")
-    card.innerHTML = `<h3>${rewardTable[rewardID]}</h3>`
+    card.classList.add("card", "redeemedRewardCard")
+    card.innerHTML = `<h3>${rewardTable[rewardID]}</h3><p>${dateRedeemed}</p>`
     card.data = data // attach all card data to the card element for usage in handleCard
-    card.onclick = handleCard
-    cardsDiv.append(card)
+    card.onclick = handleRedeemedReward
+    redeemedRewardsDiv.append(card)
 }
 
 function makeReward(data) {
@@ -78,4 +78,18 @@ function handleReward() {
     rewardInfoDiv.style.display = "flex"
     blanketDiv.classList.add("active")
     blanketDiv.style.zIndex = 1
+}
+
+function handleRedeemedReward() {
+    const { dateRedeemed, information, rewardID } = this.data
+    redeemedRewardDescription.children[0].innerHTML = rewardTable[rewardID]
+    redeemedRewardDescription.children[1].innerHTML = `Redeemed on ${dateRedeemed}`
+    redeemedRewardDescription.children[2].innerHTML = information
+    redeemedRewardInfoDiv.style.display = "flex"
+    blanketDiv.classList.add("active")
+    blanketDiv.style.zIndex = 1
+}
+
+function redeemReward() {
+    alert("Feature has not been implemented yet!")
 }

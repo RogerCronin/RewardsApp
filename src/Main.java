@@ -75,6 +75,7 @@ class ServerHandler implements HttpHandler {
             return path.equals("login") ||
                     path.equals("getCards") ||
                     path.equals("getRewards") ||
+                    path.equals("getPoints") ||
                     path.equals("redeemReward"); // if doesn't equal any of these
         } catch(Exception e) {
             return false;

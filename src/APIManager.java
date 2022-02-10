@@ -68,7 +68,14 @@ public class APIManager {
     }
 
     public void apiGetPoints(HttpExchange ex) {
+        OutputStream out = ex.getResponseBody();
+        RequestInput in;
+        try {
+            in = getRequestInput(ex, out);
+        } catch(Exception e) { return; }
 
+        GetPointsResponse res = db.getPoints(in.sessionID);
+        sendResponse(ex, out, res);
     }
 
     public void apiGetCards(HttpExchange ex) {

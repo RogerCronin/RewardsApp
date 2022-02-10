@@ -15,6 +15,8 @@ const cardInfoDiv = document.getElementById("cardInfoDiv")
 const redeemedRewardInfoDiv = document.getElementById("redeemedRewardInfoDiv")
 const rewardInfoDiv = document.getElementById("rewardInfoDiv")
 
+let points
+
 // if you aren't logged in, go to landing page
 if(!sessionStorage.getItem("sessionID")) window.location.replace("/")
 
@@ -32,15 +34,26 @@ function goBack() {
 }
 
 async function getDataOnLoad() {
-    const cardData = await fetchCards(sessionStorage.getItem("sessionID"))
-    if(!cardData.success) {
-        alert("Invalid session ID, returning to landing page")
-        window.location.replace("/")
-    } else {
-        const rewardData = await fetchRewards(sessionStorage.getItem("sessionID"))
+    let sessionID = sessionStorage.getItem("sessionID")
+    const rewardData = await fetchRewards(sessionID)
+
+    if(rewardData.success) {
         rewardData.rewards.forEach(r => makeReward(r))
-        //const redeemedRewardData = await fetchRedeemedRewards(sessionStorage.getItem("sessionID"))
-        cardData.cards.forEach(c => makeCard(c))
-        //redeemedRewardData.rewards.forEach(r => makeRedeemedReward(r))
+        fetchCards(sessionID).then(d => d.cards.forEach(c => makeCard(c)))
+        fetchRedeemedRewards(sessionID).then(d => d.rewards.forEach(r => makeRedeemedReward(r)))
+        fetch("/api/getPoints", {
+            method: "POST",
+            body: JSON.stringify({
+                sessionID: sessionID
+            })
+        })
+        .then(res => res.json())
+        .then(json => {
+            points = json.points
+            document.getElementById("pointsSpan").innerHTML = `${points} pts.`
+        })
+    } else {
+        alert("Invalid session ID, returning to landing page...")
+        window.location.replace("/")
     }
 }
