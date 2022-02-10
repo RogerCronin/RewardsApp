@@ -6,31 +6,46 @@ import APIObjects.GetTransactionsResponse.Transaction;
 import APIObjects.GetRewardsResponse.Reward;
 
 public class TestDatabaseManager implements APIReturnable {
+    // session IDs are links to a specific account ID that has been verified by username and password
+    // it's so you don't have to check the username and password every single time you want
+    // to make a request to the API
     SessionManager sm = new SessionManager();
+    // generate an example account ID
     static final String testAccountID = "account_id_" + (System.currentTimeMillis() * (Math.random() + 0.5));
 
+    // this is called whenever the user logs in
     public GetSessionIDResponse getSessionID(String username, String password) {
         // verify username and password here
+        // if success, return a new response object with newly created session ID
         return new GetSessionIDResponse(true, sm.createSession(testAccountID));
+        // otherwise, return a failure response object
+        //return new GetSessionIDResponse(false, null);
     }
 
+    // called whenever the user gets credit and debit cards
     public GetCardsResponse getCards(String sessionID) {
-        System.out.println("abc");
-        if(sm.getAccountID(sessionID).equals(testAccountID)) {
+        // fetch all the cards associated with an account ID
+        // puts them into a Card[] array called cards
+        // see examples below on how to construct a Card object
+        if(sm.getAccountID(sessionID).equals(testAccountID)) { // unnecessary example, always returns true
             Card[] cards = {
                     new Card("5412 8224 6310 0005", true, 50.0, 10.0, "2/22/22", 1.0),
                     new Card("7253 3256 7895 1245", false, 250.0, 0.0, null, 0.0)
             };
-            System.out.println(true);
+            // success response
             return new GetCardsResponse(true, cards);
         } else {
-            System.out.println(false);
+            // failure response if session ID doesn't exist or something
             return new GetCardsResponse(false, null);
         }
     }
 
+    // called whenever the user gets the list of rewards they've redeemed
     public GetRedeemedRewardsResponse getRedeemedRewards(String sessionID) {
+        // you can ignore all these if statements, at first I did it to test failure responses
         if(sm.getAccountID(sessionID).equals(testAccountID)) {
+            // make RedeemedReward[] array, see examples on how to construct RedeemedReward object with
+            // information from the database
             RedeemedReward[] rewards = {
                     new RedeemedReward("2/4/2022", "Code: 123456789",0),
                     new RedeemedReward("2/4/2022", "Voucher ID: 987654321", 1)
@@ -41,6 +56,8 @@ public class TestDatabaseManager implements APIReturnable {
         }
     }
 
+    // called whenever the user gets the list of rewards that can be redeemed by them
+    // no database work needed here
     public GetRewardsResponse getRewards(String sessionID) {
         if(sm.getAccountID(sessionID).equals(testAccountID)) {
             Reward[] rewards = {
@@ -69,8 +86,11 @@ public class TestDatabaseManager implements APIReturnable {
         }
     }
 
+    // called whenever the user gets a list of their card transactions
     public GetTransactionsResponse getTransactions(String sessionID) {
         if(sm.getAccountID(sessionID).equals(testAccountID)) {
+            // Transaction[] array of all the transactions associated with an account ID
+            // put it into GetTransactionsResponse object, etc. etc.
             Transaction[] transactions = {
                     new Transaction("5412 8224 6310 0005", "TACO BELL 843 MIDDLETOWN", 0, 5.99, 1),
                     new Transaction("5412 8224 6310 0005", "WAWA 200 MIDDLETOWN", 3, 48.10, 20)
