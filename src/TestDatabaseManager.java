@@ -5,7 +5,14 @@ import APIObjects.GetRedeemedRewardsResponse.RedeemedReward;
 import APIObjects.GetTransactionsResponse.Transaction;
 import APIObjects.GetRewardsResponse.Reward;
 
+import java.sql.*;
+
 public class TestDatabaseManager implements APIReturnable {
+
+    // link to the sql database and the username and password for accessing it
+    static final String url = "jdbc:mysql://localhost:3306/?user=root";
+    static final String user = "root";
+    static final String pass = "password";
     // session IDs are links to a specific account ID that has been verified by username and password
     // it's so you don't have to check the username and password every single time you want
     // to make a request to the API
@@ -15,11 +22,28 @@ public class TestDatabaseManager implements APIReturnable {
 
     // this is called whenever the user logs in
     public GetSessionIDResponse getSessionID(String username, String password) {
+        // boolean stores whether the data exists
+        boolean exists = false;
         // verify username and password here
-        // if success, return a new response object with newly created session ID
-        return new GetSessionIDResponse(true, sm.createSession(testAccountID));
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement()
+        ) {
+            final String queryCheck = "SELECT count(*) from messages WHERE username = ? AND password = ?";
+            final PreparedStatement ps = conn.prepareStatement(queryCheck);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            final ResultSet resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                final int count = resultSet.getInt(1);
+                exists = true;
+                // if success, return a new response object with newly created session ID
+                return new GetSessionIDResponse(exists, sm.createSession(testAccountID));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
         // otherwise, return a failure response object
-        //return new GetSessionIDResponse(false, null);
+        return new GetSessionIDResponse(exists, null);
     }
 
     // called whenever the user gets credit and debit cards
@@ -86,6 +110,11 @@ public class TestDatabaseManager implements APIReturnable {
         }
     }
 
+    @Override
+    public GetPointsResponse getPoints(String sessionID) {
+        return null;
+    }
+
     // called whenever the user gets a list of their card transactions
     public GetTransactionsResponse getTransactions(String sessionID) {
         if(sm.getAccountID(sessionID).equals(testAccountID)) {
@@ -101,12 +130,24 @@ public class TestDatabaseManager implements APIReturnable {
         }
     }
 
-    // called whenever the user gets their reward points count
-    public GetPointsResponse getPoints(String sessionID) {
-        if(sm.getAccountID(sessionID).equals(testAccountID)) {
-            return new GetPointsResponse(true, 9999);
-        } else {
-            return new GetPointsResponse(false, 0);
+    public String getUsersColumn(String columnName, String username, String password) {
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement()
+        ) {
+            final String queryCheck = "SELECT ? FROM users WHERE username = ? AND password = ?";
+            final PreparedStatement ps = conn.prepareStatement(queryCheck);
+            ps.setString(1, columnName);
+            ps.setString(2, username);
+            ps.setString(3, password);
+            final ResultSet resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                // need to add return statement
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
         }
+
+        return null;
     }
+
 }
