@@ -80,6 +80,45 @@ public class TestDatabaseManager implements APIReturnable {
         }
     }
 
+
+    public String getRedeemDate(int account_id) {
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement()
+        ) {
+            final String queryCheck = "SELECT redeemDate FROM rewards WHERE account_id = ?";
+            final PreparedStatement ps = conn.prepareStatement(queryCheck);
+            ps.setInt(1, account_id);
+            final ResultSet resultSet = ps.executeQuery();
+            final String redeemDate = resultSet.getString("redeemDate");
+            if(resultSet.next()) {
+                return redeemDate;
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public int getRewardId(int account_id) {
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement()
+        ) {
+            final String queryCheck = "SELECT reward_id FROM rewards WHERE account_id = ?";
+            final PreparedStatement ps = conn.prepareStatement(queryCheck);
+            ps.setInt(1, account_id);
+            final ResultSet resultSet = ps.executeQuery();
+            final int reward_id = resultSet.getInt("reward_id");
+            if(resultSet.next()) {
+                return reward_id;
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return 0;
+    }
+
     // called whenever the user gets the list of rewards that can be redeemed by them
     // no database work needed here
     public GetRewardsResponse getRewards(String sessionID) {
@@ -130,24 +169,41 @@ public class TestDatabaseManager implements APIReturnable {
         }
     }
 
-    public String getUsersColumn(String columnName, String username, String password) {
+    public int getAccountId(String username, String password) {
         try (Connection conn = DriverManager.getConnection(url, user, pass);
              Statement stmt = conn.createStatement()
         ) {
-            final String queryCheck = "SELECT ? FROM users WHERE username = ? AND password = ?";
+            final String queryCheck = "SELECT account_id FROM users WHERE username = ? AND password = ?";
             final PreparedStatement ps = conn.prepareStatement(queryCheck);
-            ps.setString(1, columnName);
-            ps.setString(2, username);
-            ps.setString(3, password);
+            ps.setString(1, username);
+            ps.setString(2, password);
             final ResultSet resultSet = ps.executeQuery();
+            final int account_id = resultSet.getInt("account_id");
             if(resultSet.next()) {
-                // need to add return statement
+                return account_id;
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
 
-        return null;
+        return 0;
+    }
+
+    public int getCardNumber(int account_id) {
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement()
+        ) {
+            final String queryCheck = "SELECT cardNumber FROM cards WHERE account_id = ?";
+            final PreparedStatement ps = conn.prepareStatement(queryCheck);
+            ps.setInt(1, account_id);
+            final ResultSet resultSet = ps.executeQuery();
+            final int cardNumber = resultSet.getInt("cardNumber");
+            return cardNumber;
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return 0;
     }
 
 }
