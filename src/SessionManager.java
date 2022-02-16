@@ -3,23 +3,23 @@ import java.util.HashMap;
 public class SessionManager {
     final static int MIN_ACTIVE = 30;
     record Session(
-        String accountID,
+        int accountID,
         long timeWhenDelete
     ) {}
-    HashMap<String, Session> sessionIDList = new HashMap<>();
+    HashMap<Integer, Session> sessionIDList = new HashMap<>();
 
-    public String generateSessionID() {
-        return "session_id_" + (System.currentTimeMillis() * (Math.random() + 0.5));
+    public int generateSessionID() {
+        return (int) (System.currentTimeMillis() * (Math.random() + 0.5));
     }
 
-    public String createSession(String accountID) {
-        String sessionID = generateSessionID();
+    public int createSession(int accountID) {
+        int sessionID = generateSessionID();
         sessionIDList.put(sessionID, new Session(accountID,
                 System.currentTimeMillis() + MIN_ACTIVE * 60000));
         return sessionID;
     }
 
-    public String getAccountID(String sessionID) {
+    public int getAccountID(int sessionID) {
         return sessionIDList.get(sessionID).accountID;
     }
 

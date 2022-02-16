@@ -14,36 +14,33 @@ public class TestDatabaseManager implements APIReturnable {
     static final String user = "root";
     static final String pass = "password";
     // session IDs are links to a specific account ID that has been verified by username and password
-    // it's so you don't have to check the username and password every single time you want
+    // you don't have to check the username and password every single time you want
     // to make a request to the API
     SessionManager sm = new SessionManager();
     // generate an example account ID
-    static final String testAccountID = "account_id_" + (System.currentTimeMillis() * (Math.random() + 0.5));
+    static int account_id = getAccountId("Username", "Password");
+    static final int testAccountID = (int) (account_id + (System.currentTimeMillis() * (Math.random() + 0.5)));
 
     // this is called whenever the user logs in
     public GetSessionIDResponse getSessionID(String username, String password) {
         // boolean stores whether the data exists
-        boolean exists = false;
         // verify username and password here
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
-             Statement stmt = conn.createStatement()
+        try (Connection conn = DriverManager.getConnection(url, user, pass)
         ) {
-            final String queryCheck = "SELECT count(*) from messages WHERE username = ? AND password = ?";
+            final String queryCheck = "SELECT count(*) from users WHERE username = ? AND password = ?";
             final PreparedStatement ps = conn.prepareStatement(queryCheck);
             ps.setString(1, username);
             ps.setString(2, password);
             final ResultSet resultSet = ps.executeQuery();
             if(resultSet.next()) {
-                final int count = resultSet.getInt(1);
-                exists = true;
                 // if success, return a new response object with newly created session ID
-                return new GetSessionIDResponse(exists, sm.createSession(testAccountID));
+                return new GetSessionIDResponse(true, sm.createSession(testAccountID));
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
         // otherwise, return a failure response object
-        return new GetSessionIDResponse(exists, null);
+        return new GetSessionIDResponse(false, 0);
     }
 
     // called whenever the user gets credit and debit cards
@@ -51,7 +48,7 @@ public class TestDatabaseManager implements APIReturnable {
         // fetch all the cards associated with an account ID
         // puts them into a Card[] array called cards
         // see examples below on how to construct a Card object
-        if(sm.getAccountID(sessionID).equals(testAccountID)) { // unnecessary example, always returns true
+        if(sm.getAccountID(Integer.parseInt(sessionID)) == (testAccountID)) { // unnecessary example, always returns true
             Card[] cards = {
                     new Card("5412 8224 6310 0005", true, 50.0, 10.0, "2/22/22", 1.0),
                     new Card("7253 3256 7895 1245", false, 250.0, 0.0, null, 0.0)
@@ -67,7 +64,7 @@ public class TestDatabaseManager implements APIReturnable {
     // called whenever the user gets the list of rewards they've redeemed
     public GetRedeemedRewardsResponse getRedeemedRewards(String sessionID) {
         // you can ignore all these if statements, at first I did it to test failure responses
-        if(sm.getAccountID(sessionID).equals(testAccountID)) {
+        if(sm.getAccountID(Integer.parseInt(sessionID)) == (testAccountID)) {
             // make RedeemedReward[] array, see examples on how to construct RedeemedReward object with
             // information from the database
             RedeemedReward[] rewards = {
@@ -82,8 +79,7 @@ public class TestDatabaseManager implements APIReturnable {
 
 
     public String getRedeemDate(int account_id) {
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
-             Statement stmt = conn.createStatement()
+        try (Connection conn = DriverManager.getConnection(url, user, pass)
         ) {
             final String queryCheck = "SELECT redeemDate FROM rewards WHERE account_id = ?";
             final PreparedStatement ps = conn.prepareStatement(queryCheck);
@@ -101,8 +97,7 @@ public class TestDatabaseManager implements APIReturnable {
     }
 
     public int getRewardId(int account_id) {
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
-             Statement stmt = conn.createStatement()
+        try (Connection conn = DriverManager.getConnection(url, user, pass)
         ) {
             final String queryCheck = "SELECT reward_id FROM rewards WHERE account_id = ?";
             final PreparedStatement ps = conn.prepareStatement(queryCheck);
@@ -122,7 +117,7 @@ public class TestDatabaseManager implements APIReturnable {
     // called whenever the user gets the list of rewards that can be redeemed by them
     // no database work needed here
     public GetRewardsResponse getRewards(String sessionID) {
-        if(sm.getAccountID(sessionID).equals(testAccountID)) {
+        if(sm.getAccountID(Integer.parseInt(sessionID)) == (testAccountID)) {
             Reward[] rewards = {
                     new Reward(
                             0,
@@ -156,7 +151,7 @@ public class TestDatabaseManager implements APIReturnable {
 
     // called whenever the user gets a list of their card transactions
     public GetTransactionsResponse getTransactions(String sessionID) {
-        if(sm.getAccountID(sessionID).equals(testAccountID)) {
+        if(sm.getAccountID(Integer.parseInt(sessionID)) == (testAccountID)) {
             // Transaction[] array of all the transactions associated with an account ID
             // put it into GetTransactionsResponse object, etc. etc.
             Transaction[] transactions = {
@@ -169,9 +164,8 @@ public class TestDatabaseManager implements APIReturnable {
         }
     }
 
-    public int getAccountId(String username, String password) {
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
-             Statement stmt = conn.createStatement()
+    public static int getAccountId(String username, String password) {
+        try (Connection conn = DriverManager.getConnection(url, user, pass)
         ) {
             final String queryCheck = "SELECT account_id FROM users WHERE username = ? AND password = ?";
             final PreparedStatement ps = conn.prepareStatement(queryCheck);
@@ -190,15 +184,13 @@ public class TestDatabaseManager implements APIReturnable {
     }
 
     public int getCardNumber(int account_id) {
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
-             Statement stmt = conn.createStatement()
+        try (Connection conn = DriverManager.getConnection(url, user, pass)
         ) {
             final String queryCheck = "SELECT cardNumber FROM cards WHERE account_id = ?";
             final PreparedStatement ps = conn.prepareStatement(queryCheck);
             ps.setInt(1, account_id);
             final ResultSet resultSet = ps.executeQuery();
-            final int cardNumber = resultSet.getInt("cardNumber");
-            return cardNumber;
+            return resultSet.getInt("cardNumber");
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
